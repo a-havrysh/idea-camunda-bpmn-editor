@@ -7,7 +7,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.serviceContainer.NonInjectable;
-import dev.camunda.bpmn.editor.ui.component.EngineComponent;
+import dev.camunda.bpmn.editor.ui.component.panel.EnginePanel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -42,11 +42,11 @@ public final class BpmnEditorSettings implements PersistentStateComponent<BpmnEd
         private Engine engine;
         private ScriptType scriptType;
         private SchemaTheme schemaTheme = SchemaTheme.DEFAULT;
+        private Boolean useBpmnLinter = true;
+        private Boolean useToolBar = true;
 
         @NotNull
         private Map<String, FileSettings> fileSettings = new HashMap<>();
-
-        private Boolean useBpmnLinter = true;
 
         /**
          * Adds file settings for a specific file.
@@ -54,7 +54,7 @@ public final class BpmnEditorSettings implements PersistentStateComponent<BpmnEd
          * @param fileName     The name of the file
          * @param engineResult The engine result containing the engine and whether to save it as default
          */
-        public void addFileSettings(@NotNull String fileName, @NotNull EngineComponent.EngineResult engineResult) {
+        public void addFileSettings(@NotNull String fileName, @NotNull EnginePanel.EngineResult engineResult) {
             var value = new FileSettings();
             value.setEngine(engineResult.engine());
             fileSettings.put(fileName, value);

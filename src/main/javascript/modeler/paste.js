@@ -1,7 +1,7 @@
 import {isPaste} from "diagram-js/lib/features/keyboard/KeyboardUtil";
 import request from 'sync-request';
 
-export function handlePasteAsync(event, bpmnModeler, serverBaseUrl) {
+export function handlePaste(event, bpmnModeler, serverBaseUrl) {
     const {keyEvent} = event;
     if (!isPaste(keyEvent)) {
         return;

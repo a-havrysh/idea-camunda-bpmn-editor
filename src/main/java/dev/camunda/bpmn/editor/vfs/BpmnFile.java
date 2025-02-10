@@ -5,6 +5,7 @@ import static com.intellij.openapi.vfs.VirtualFileUtil.writeBytes;
 import static dev.camunda.bpmn.editor.util.Base64Utils.decodeBytes;
 import static dev.camunda.bpmn.editor.util.Base64Utils.encode;
 
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.vfs.VirtualFile;
 import lombok.Getter;
 
@@ -49,7 +50,7 @@ public class BpmnFile {
      * @param encodedContent The Base64 encoded content to be saved to the file.
      */
     public void saveEncodedContent(String encodedContent) {
-        writeBytes(file, decodeBytes(encodedContent));
+        WriteAction.run(() -> writeBytes(file, decodeBytes(encodedContent)));
     }
 
     /**

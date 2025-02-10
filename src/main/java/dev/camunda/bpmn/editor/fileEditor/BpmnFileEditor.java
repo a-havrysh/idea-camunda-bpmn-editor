@@ -1,14 +1,21 @@
 package dev.camunda.bpmn.editor.fileEditor;
 
 import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createCloseScriptFileJSQuery;
+import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createCopyJSQuery;
+import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createExportAsSvgJSQuery;
 import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createInitBpmnJSQuery;
 import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createOpenScriptFileJSQuery;
+import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createPasteJSQuery;
+import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createRedoJSQuery;
 import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createSaveBpmnJSQuery;
+import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createSaveSvgJSQuery;
 import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createSetBaseUrlJSQuery;
 import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createSetBpmnLintrcJSQuery;
 import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createSetClipboardJSQuery;
 import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createSetFocusScriptFileJSQuery;
 import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createShowErrorNotifictionJSQuery;
+import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createShowNotifictionJSQuery;
+import static dev.camunda.bpmn.editor.jcef.jsquery.JSQueryFactory.createUndoJSQuery;
 
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorState;
@@ -19,17 +26,21 @@ import dev.camunda.bpmn.editor.jcef.Browser;
 import dev.camunda.bpmn.editor.jcef.BrowserService;
 import dev.camunda.bpmn.editor.jcef.jsquery.JSQuery;
 import dev.camunda.bpmn.editor.project.ClipboardManager;
+import dev.camunda.bpmn.editor.project.ImageService;
 import dev.camunda.bpmn.editor.project.ProjectService;
 import dev.camunda.bpmn.editor.server.Server;
 import dev.camunda.bpmn.editor.server.handler.ClipboardServerHandler;
 import dev.camunda.bpmn.editor.server.handler.LintServerHandler;
 import dev.camunda.bpmn.editor.server.handler.UIServerHandler;
 import dev.camunda.bpmn.editor.settings.BpmnEditorSettings;
-import dev.camunda.bpmn.editor.ui.component.EngineComponent;
+import dev.camunda.bpmn.editor.ui.component.panel.EnginePanel;
+import dev.camunda.bpmn.editor.ui.component.popupmenu.EditorPopupMenu;
+import dev.camunda.bpmn.editor.ui.component.toolbar.EditorToolBarBuilder;
 import dev.camunda.bpmn.editor.vfs.BpmnFile;
 import dev.camunda.bpmn.editor.vfs.ScriptFileManager;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComponent;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +80,9 @@ public class BpmnFileEditor implements FileEditor {
     @Getter
     private final JComponent component;
 
+    @Getter
+    private final JComponent preferredFocusedComponent;
+
     private final Server server;
     private final BpmnFile bpmnFile;
     private final BrowserService browserService;
@@ -96,7 +110,6 @@ public class BpmnFileEditor implements FileEditor {
      * @param file    The virtual file representing the BPMN file to be edited
      */
     public BpmnFileEditor(Project project, VirtualFile file) {
-        var state = BpmnEditorSettings.getInstance().getState();
         var clipboardService = new ClipboardManager();
         var projectService = new ProjectService(project);
         var bpmnEditorUIHandler = new UIServerHandler();
@@ -104,16 +117,72 @@ public class BpmnFileEditor implements FileEditor {
         var clipboardHandler = new ClipboardServerHandler(clipboardService);
         this.server = new Server(bpmnEditorUIHandler, lintPluginHandler, clipboardHandler);
 
-        var browser = new Browser();
+        var editorPopupMenu = new EditorPopupMenu();
+        var browser = new Browser(editorPopupMenu);
+        setEditorPopupMenuActions(editorPopupMenu, browser);
+
         this.bpmnFile = new BpmnFile(file);
         this.scriptFileManager = new ScriptFileManager(projectService, browser);
+        var state = BpmnEditorSettings.getInstance().getState();
+        var imageService = new ImageService(projectService);
+        var initQueries = createInitJsQueries(browser, projectService, state, clipboardService, imageService);
+        this.browserService = new BrowserService(initQueries, browser, server, bpmnFile);
 
-        var initQueries = new ArrayList<JSQuery>(8);
+        this.preferredFocusedComponent = state.isEngineSet(bpmnFile.getPath()) ? browserService.loadBpmn() :
+                new EnginePanel(result -> state.addFileSettings(bpmnFile.getPath(), result),
+                        browserService::loadBpmn);
+
+        this.component = !state.getUseToolBar() ? preferredFocusedComponent :
+                new EditorToolBarBuilder(preferredFocusedComponent)
+                        .undoAction(createUndoJSQuery(browser))
+                        .redoAction(createRedoJSQuery(browser))
+                        .separator()
+                        .copyAction(createCopyJSQuery(browser))
+                        .pasteAction(createPasteJSQuery(browser))
+                        .separator()
+                        .exportAsSvgAction(createExportAsSvgJSQuery(browser))
+                        .build();
+    }
+
+    /**
+     * Sets up the actions for the editor's popup menu.
+     * This method configures various menu items with their corresponding JavaScript queries.
+     *
+     * @param editorPopupMenu The popup menu to be configured
+     * @param browser         The browser instance used to execute JavaScript queries
+     */
+    private void setEditorPopupMenuActions(EditorPopupMenu editorPopupMenu, Browser browser) {
+        editorPopupMenu.undoMenuItemAction(createUndoJSQuery(browser))
+                .redoMenuItemAction(createRedoJSQuery(browser))
+                .copyMenuItemAction(createCopyJSQuery(browser))
+                .pasteMenuItemAction(createPasteJSQuery(browser))
+                .exportAsSvgMenuItemAction(createExportAsSvgJSQuery(browser));
+    }
+
+    /**
+     * Creates a list of initial JavaScript queries to be executed when the editor is loaded.
+     * These queries set up various aspects of the BPMN editor, such as linting, error notifications,
+     * and file management.
+     *
+     * @param browser          The browser instance used to execute JavaScript queries
+     * @param projectService   The project service for accessing project-related information
+     * @param state            The current state of the BPMN editor settings
+     * @param clipboardService The clipboard manager for handling copy-paste operations
+     * @param imageService     The image service for handling image-related operations
+     * @return A list of JSQuery objects representing the initial queries to be executed
+     */
+    private List<JSQuery> createInitJsQueries(Browser browser,
+                                              ProjectService projectService,
+                                              BpmnEditorSettings.State state,
+                                              ClipboardManager clipboardService,
+                                              ImageService imageService) {
+        var initQueries = new ArrayList<JSQuery>(9);
         if (state.getUseBpmnLinter()) {
             initQueries.add(createSetBpmnLintrcJSQuery(browser, projectService));
         }
 
         initQueries.add(createShowErrorNotifictionJSQuery(browser, projectService));
+        initQueries.add(createShowNotifictionJSQuery(browser, projectService));
         initQueries.add(createSetBaseUrlJSQuery(browser, server));
         initQueries.add(createInitBpmnJSQuery(browser, bpmnFile));
         initQueries.add(createCloseScriptFileJSQuery(browser, scriptFileManager));
@@ -121,21 +190,9 @@ public class BpmnFileEditor implements FileEditor {
         initQueries.add(createSaveBpmnJSQuery(browser, bpmnFile));
         initQueries.add(createSetClipboardJSQuery(browser, clipboardService));
         initQueries.add(createSetFocusScriptFileJSQuery(browser, scriptFileManager));
-        this.browserService = new BrowserService(initQueries, browser, server, bpmnFile);
-        this.component = state.isEngineSet(bpmnFile.getPath()) ? browserService.loadBpmn() :
-                new EngineComponent(result -> state.addFileSettings(bpmnFile.getPath(), result),
-                        browserService::loadBpmn);
-    }
+        initQueries.add(createSaveSvgJSQuery(browser, imageService));
 
-    /**
-     * Returns the preferred component to focus when the editor is opened.
-     * In this case, it's the main BPMN editor part.
-     *
-     * @return The JComponent that should receive focus when the editor is opened.
-     */
-    @Override
-    public @Nullable JComponent getPreferredFocusedComponent() {
-        return component;
+        return initQueries;
     }
 
     /**

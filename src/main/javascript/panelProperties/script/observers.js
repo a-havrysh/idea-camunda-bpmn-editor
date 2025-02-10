@@ -1,5 +1,5 @@
-import {closeAllVirtualFiles, processAllScriptEditors, processAllScriptFormats} from './script-editor';
-import {scriptFormat} from '../utils/utils'
+import {closeAllVirtualFiles, processAllScriptEditors, processAllScriptFormats} from './editor';
+import {scriptFormat} from '../../utils/utils'
 
 function isChangedFullScriptBlock(node) {
     return (node.dataset && node.dataset.groupId && node.dataset.groupId.includes('group-CamundaPlatform__Script'))
@@ -23,7 +23,7 @@ function isChangedScriptValue(node) {
         (node.dataset.entryId.includes('scriptValue') || node.dataset.entryId.includes('ScriptValue'));
 }
 
-export function setupObserver() {
+export function setupScriptObserver() {
     new MutationObserver((mutationsList) => {
                 for (const mutation of mutationsList) {
                     if (mutation.type !== 'childList') {

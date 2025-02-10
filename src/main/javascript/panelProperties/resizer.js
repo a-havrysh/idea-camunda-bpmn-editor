@@ -1,4 +1,4 @@
-export function enableResizing() {
+export function enablePanelPropertiesResizing() {
     const propertiesPanel = document.getElementById('js-properties-panel');
     const canvas = document.getElementById('js-canvas');
     const resizer = document.createElement('div');

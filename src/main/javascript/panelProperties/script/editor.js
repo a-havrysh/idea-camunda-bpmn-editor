@@ -1,7 +1,8 @@
 import CodeMirror from 'codemirror';
-import {isDarkMode, scriptFormat} from '../utils/utils';
-import '../styles';
+import {isDarkMode, scriptFormat} from '../../utils/utils';
+import '../../styles';
 import 'codemirror/addon/display/autorefresh.js';
+import {decode, encode} from 'js-base64';
 
 export function processScriptEditor(textarea) {
     if (textarea && !textarea.codeMirror) {
@@ -43,7 +44,7 @@ export function processScriptEditor(textarea) {
                 window.setFocusVirtualFile(editorContainer.getAttribute('virtual-file-id'));
             } else {
                 const format = getScriptFormatValue(editorContainer);
-                window.openScriptExternalFile(btoa(textarea.value) + '@' + format).then(virtualFileId => {
+                window.openScriptExternalFile(encode(textarea.value) + '@' + format).then(virtualFileId => {
                     editorContainer.setAttribute('virtual-file-id', virtualFileId);
                 });
             }
@@ -103,7 +104,7 @@ window.updateScript = function (virtualFileId, scriptValue) {
     const editorContainer = getCodeEditorContainer(virtualFileId);
     if (editorContainer) {
         const codeMirror = editorContainer.querySelector('.CodeMirror').CodeMirror;
-        codeMirror.setValue(atob(scriptValue));
+        codeMirror.setValue(decode(scriptValue));
     }
 }
 

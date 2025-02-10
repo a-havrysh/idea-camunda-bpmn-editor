@@ -1,8 +1,11 @@
 package dev.camunda.bpmn.editor.jcef;
 
+import static com.intellij.ui.jcef.JBCefBrowserBase.Properties.NO_CONTEXT_MENU;
+
 import com.intellij.ui.jcef.JBCefBrowser;
 import com.intellij.ui.jcef.JBCefBrowserBase;
 import com.intellij.ui.jcef.JBCefJSQuery;
+import dev.camunda.bpmn.editor.ui.component.popupmenu.EditorPopupMenu;
 import java.util.function.Function;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
@@ -18,9 +21,16 @@ public class Browser extends JBCefBrowser {
 
     /**
      * Constructs a new JBCefBrowserWrapper instance with specific configurations.
+     *
+     * @param popupMenu The popup menu to be associated with the browser
      */
-    public Browser() {
-        super(JBCefBrowser.createBuilder().setOffScreenRendering(false).setMouseWheelEventEnable(true).setEnableOpenDevToolsMenuItem(true));
+    public Browser(EditorPopupMenu popupMenu) {
+        super(JBCefBrowser.createBuilder()
+                .setOffScreenRendering(false)
+                .setMouseWheelEventEnable(true)
+                .setEnableOpenDevToolsMenuItem(true));
+        setProperty(NO_CONTEXT_MENU, true);
+        getComponent().setComponentPopupMenu(popupMenu);
     }
 
     /**

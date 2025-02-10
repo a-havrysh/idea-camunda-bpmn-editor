@@ -4,7 +4,7 @@ import static java.util.Objects.nonNull;
 
 import com.intellij.openapi.options.Configurable;
 import dev.camunda.bpmn.editor.settings.BpmnEditorSettings;
-import dev.camunda.bpmn.editor.ui.component.SettingsComponent;
+import dev.camunda.bpmn.editor.ui.component.panel.SettingsPanel;
 import java.util.Optional;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -24,7 +24,7 @@ public class SettingsConfigurable implements Configurable {
 
     private static final String BPMN_EDITOR_SETTINGS = "Camunda BPMN Editor Settings";
 
-    private SettingsComponent settingsComponent;
+    private SettingsPanel settingsPanel;
 
     /**
      * Returns the display name of the settings panel.
@@ -44,8 +44,8 @@ public class SettingsConfigurable implements Configurable {
      */
     @Override
     public @NotNull JComponent getPreferredFocusedComponent() {
-        return Optional.ofNullable(settingsComponent)
-                .map(SettingsComponent::getPreferredFocusedComponent)
+        return Optional.ofNullable(settingsPanel)
+                .map(SettingsPanel::getPreferredFocusedComponent)
                 .orElse(new JPanel());
     }
 
@@ -56,7 +56,7 @@ public class SettingsConfigurable implements Configurable {
      */
     @Override
     public @NotNull JComponent createComponent() {
-        return this.settingsComponent = new SettingsComponent();
+        return this.settingsPanel = new SettingsPanel();
     }
 
     /**
@@ -67,12 +67,13 @@ public class SettingsConfigurable implements Configurable {
     @Override
     public boolean isModified() {
         var state = BpmnEditorSettings.getInstance().getState();
-        return Optional.ofNullable(settingsComponent)
+        return Optional.ofNullable(settingsPanel)
                 .map(component -> component.getColorThemeValue() != state.getColorTheme()
                         || component.getSchemaThemeValue() != state.getSchemaTheme()
                         || component.getScriptTypeValue() != state.getScriptType()
                         || component.getEngineValue() != state.getEngine()
                         || component.getUseBpmnLinter() != state.getUseBpmnLinter()
+                        || component.getUseToolBar() != state.getUseToolBar()
                         || !component.getFileSettings().equals(state.getFileSettings()))
                 .orElse(false);
     }
@@ -83,13 +84,14 @@ public class SettingsConfigurable implements Configurable {
     @Override
     public void apply() {
         var state = BpmnEditorSettings.getInstance().getState();
-        Optional.ofNullable(settingsComponent).ifPresent(component -> {
+        Optional.ofNullable(settingsPanel).ifPresent(component -> {
             state.setColorTheme(component.getColorThemeValue());
             state.setSchemaTheme(component.getSchemaThemeValue());
             state.setScriptType(component.getScriptTypeValue());
             state.setEngine(component.getEngineValue());
             state.setFileSettings(component.getFileSettings());
             state.setUseBpmnLinter(component.getUseBpmnLinter());
+            state.setUseToolBar(component.getUseToolBar());
         });
     }
 
@@ -99,13 +101,14 @@ public class SettingsConfigurable implements Configurable {
     @Override
     public void reset() {
         var state = BpmnEditorSettings.getInstance().getState();
-        Optional.ofNullable(settingsComponent).ifPresent(component -> {
+        Optional.ofNullable(settingsPanel).ifPresent(component -> {
             component.setColorThemeValue(state.getColorTheme());
             component.setSchemaThemeValue(state.getSchemaTheme());
             component.setScriptTypeValue(state.getScriptType());
             component.setEngineValue(state.getEngine());
             component.setFileSettings(state.getFileSettings());
             component.setUseBpmnLinter(state.getUseBpmnLinter());
+            component.setUseToolBar(state.getUseToolBar());
         });
     }
 
@@ -114,9 +117,9 @@ public class SettingsConfigurable implements Configurable {
      */
     @Override
     public void disposeUIResources() {
-        if (nonNull(settingsComponent)) {
-            settingsComponent.dispose();
-            settingsComponent = null;
+        if (nonNull(settingsPanel)) {
+            settingsPanel.dispose();
+            settingsPanel = null;
         }
     }
 }

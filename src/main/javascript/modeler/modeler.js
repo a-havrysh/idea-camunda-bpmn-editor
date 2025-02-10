@@ -64,6 +64,10 @@ const getCommonModules = async (useLintModule) => {
 
 export async function initModeler(useLintModule) {
     const commonOptions = await getCommonOptions();
+    return await initBaseModeler(useLintModule, commonOptions);
+}
+
+async function initBaseModeler(useLintModule, commonOptions) {
     const commonModules = await getCommonModules(useLintModule);
 
     switch (engine) {

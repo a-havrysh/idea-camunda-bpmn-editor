@@ -3,9 +3,9 @@ package dev.camunda.bpmn.editor.jcef.jsquery;
 import static dev.camunda.bpmn.editor.util.Base64Utils.encode;
 import static lombok.AccessLevel.PRIVATE;
 
-import com.intellij.openapi.application.WriteAction;
 import dev.camunda.bpmn.editor.jcef.Browser;
 import dev.camunda.bpmn.editor.project.ClipboardManager;
+import dev.camunda.bpmn.editor.project.ImageService;
 import dev.camunda.bpmn.editor.project.ProjectService;
 import dev.camunda.bpmn.editor.server.Server;
 import dev.camunda.bpmn.editor.vfs.BpmnFile;
@@ -55,9 +55,7 @@ public final class JSQueryFactory {
      * @return A JSQuery for saving BPMN XML content
      */
     public static JSQuery createSaveBpmnJSQuery(Browser browser, BpmnFile bpmnFile) {
-        return new JSQuery("updateBpmnXml", browser,
-                encodedXml -> WriteAction.run(() -> bpmnFile.saveEncodedContent(encodedXml)),
-                500);
+        return new JSQuery("updateBpmnXml", browser, bpmnFile::saveEncodedContent, 500);
     }
 
     /**
@@ -157,5 +155,81 @@ public final class JSQueryFactory {
      */
     public static JSQuery createShowErrorNotifictionJSQuery(Browser browser, ProjectService projectService) {
         return new JSQuery("showErrorNotification", browser, projectService::showErrorNotification, 10);
+    }
+
+    /**
+     * Creates a JSQuery for showing general notifications in the browser.
+     * <p>
+     * This method establishes a communication channel between the JavaScript frontend
+     * and the Java backend through ProjectService. It enables JavaScript code to trigger
+     * general notifications that will be displayed in the IntelliJ IDEA environment.
+     *
+     * @param browser        The Browser instance where the JavaScript will run
+     * @param projectService The ProjectService instance that will handle showing the notifications
+     * @return A JSQuery instance configured to show general notifications
+     */
+    public static JSQuery createShowNotifictionJSQuery(Browser browser, ProjectService projectService) {
+        return new JSQuery("showNotification", browser, projectService::showNotification, 10);
+    }
+
+    /**
+     * Creates a JSQuery for performing an undo operation in the BPMN editor.
+     *
+     * @param browser The Browser instance where the JavaScript will run.
+     * @return A JSQuery instance configured to perform an undo operation.
+     */
+    public static JSQuery createUndoJSQuery(Browser browser) {
+        return new JSQuery("undoOperation();", browser);
+    }
+
+    /**
+     * Creates a JSQuery for performing a redo operation in the BPMN editor.
+     *
+     * @param browser The Browser instance where the JavaScript will run.
+     * @return A JSQuery instance configured to perform a redo operation.
+     */
+    public static JSQuery createRedoJSQuery(Browser browser) {
+        return new JSQuery("redoOperation();", browser);
+    }
+
+    /**
+     * Creates a JSQuery for copying selected content in the BPMN editor.
+     *
+     * @param browser The Browser instance where the JavaScript will run.
+     * @return A JSQuery instance configured to copy selected content.
+     */
+    public static JSQuery createCopyJSQuery(Browser browser) {
+        return new JSQuery("copySelectedContent();", browser);
+    }
+
+    /**
+     * Creates a JSQuery for pasting content in the BPMN editor.
+     *
+     * @param browser The Browser instance where the JavaScript will run.
+     * @return A JSQuery instance configured to paste content.
+     */
+    public static JSQuery createPasteJSQuery(Browser browser) {
+        return new JSQuery("pasteSelectedContent();", browser);
+    }
+
+    /**
+     * Creates a JSQuery for exporting the BPMN diagram as an SVG file.
+     *
+     * @param browser The Browser instance where the JavaScript will run.
+     * @return A JSQuery instance configured to export the diagram as SVG.
+     */
+    public static JSQuery createExportAsSvgJSQuery(Browser browser) {
+        return new JSQuery("exportAsSvg();", browser);
+    }
+
+    /**
+     * Creates a JSQuery for saving the BPMN diagram as an SVG file.
+     *
+     * @param browser      The Browser instance where the JavaScript will run.
+     * @param imageService The ImageService instance used to save the SVG image.
+     * @return A JSQuery instance configured to save the diagram as SVG.
+     */
+    public static JSQuery createSaveSvgJSQuery(Browser browser, ImageService imageService) {
+        return new JSQuery("saveSvg", browser, imageService::saveSvgImage, 10);
     }
 }

@@ -1,6 +1,7 @@
-package dev.camunda.bpmn.editor.ui.component;
+package dev.camunda.bpmn.editor.ui.component.panel;
 
 import static com.intellij.ui.JBColor.RED;
+import static com.intellij.util.ui.JBUI.Borders.emptyBottom;
 import static com.intellij.util.ui.JBUI.Borders.emptyLeft;
 import static dev.camunda.bpmn.editor.util.ComponentUtils.createNullableComboBox;
 import static java.awt.FlowLayout.LEFT;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
  *   <li>Default script type selection</li>
  *   <li>Default engine selection</li>
  *   <li>BPMN Linter usage toggle</li>
+ *   <li>Toolbar usage toggle</li>
  *   <li>File-specific settings management through a table</li>
  * </ul>
  *
@@ -43,9 +45,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Oleksandr Havrysh
  */
-public class SettingsComponent extends JPanel implements Disposable {
+public class SettingsPanel extends JPanel implements Disposable {
 
     private final JCheckBox useBpmnLinter;
+    private final JCheckBox useToolBar;
     private final BpmnSettingsTable bpmnSettingsTable;
     private final JComboBox<BpmnEditorSettings.Engine> engineComboBox;
     private final JComboBox<BpmnEditorSettings.ScriptType> scriptTypeComboBox;
@@ -56,7 +59,7 @@ public class SettingsComponent extends JPanel implements Disposable {
      * Constructs a new BpmnEditorSettingsComponent.
      * Initializes the combo boxes with the available options and builds the form.
      */
-    public SettingsComponent() {
+    public SettingsPanel() {
         super(new VerticalLayout(5));
 
         this.bpmnSettingsTable = new BpmnSettingsTable();
@@ -65,6 +68,7 @@ public class SettingsComponent extends JPanel implements Disposable {
         this.engineComboBox = createNullableComboBox(BpmnEditorSettings.Engine.values());
         this.scriptTypeComboBox = createNullableComboBox(BpmnEditorSettings.ScriptType.values());
         this.useBpmnLinter = new JCheckBox("Use BPMN Linter");
+        this.useToolBar = new JCheckBox("Use toolbar");
 
         add(addDisclaimerComponents());
         add(new TitledSeparator("Global Settings"));
@@ -101,9 +105,14 @@ public class SettingsComponent extends JPanel implements Disposable {
      */
     private JPanel addGlobalSettingComponents() {
         var useBpmnLinterPanel = new JPanel(new VerticalLayout(3));
+        useBpmnLinterPanel.setBorder(emptyBottom(10));
         useBpmnLinterPanel.add(useBpmnLinter);
         useBpmnLinterPanel.add(new DescriptionLabel("Add '.bpmnlintrc' file to the project to enable BPMN linter"));
         useBpmnLinterPanel.add(new DescriptionLabel("For use custom plugins, put the source code or add it to 'package.json' to the project and run 'npm install'"));
+
+        var useToolBarPanel = new JPanel(new VerticalLayout(3));
+        useToolBarPanel.add(useToolBar);
+        useToolBarPanel.add(new DescriptionLabel("Show toolbar for the editor"));
 
         var globalSettingPanel = new JPanel(new VerticalLayout(3));
         globalSettingPanel.setBorder(emptyLeft(20));
@@ -112,6 +121,7 @@ public class SettingsComponent extends JPanel implements Disposable {
         globalSettingPanel.add(createComboboxPanel("Default script type:", scriptTypeComboBox));
         globalSettingPanel.add(createComboboxPanel("Default engine:", engineComboBox));
         globalSettingPanel.add(useBpmnLinterPanel);
+        globalSettingPanel.add(useToolBarPanel);
 
         return globalSettingPanel;
     }
@@ -296,6 +306,24 @@ public class SettingsComponent extends JPanel implements Disposable {
      */
     public void setUseBpmnLinter(Boolean useBpmnLinter) {
         this.useBpmnLinter.setSelected(useBpmnLinter);
+    }
+
+    /**
+     * Returns the state of the toolbar usage checkbox.
+     *
+     * @return {@code true} if the toolbar is set to be used, {@code false} otherwise
+     */
+    public Boolean getUseToolBar() {
+        return useToolBar.isSelected();
+    }
+
+    /**
+     * Sets the state of the toolbar usage checkbox.
+     *
+     * @param useToolBar {@code true} to enable the toolbar, {@code false} to disable it
+     */
+    public void setUseToolBar(Boolean useToolBar) {
+        this.useToolBar.setSelected(useToolBar);
     }
 
     /**

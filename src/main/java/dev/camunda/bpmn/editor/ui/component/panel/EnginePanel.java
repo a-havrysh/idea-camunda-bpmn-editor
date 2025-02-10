@@ -1,4 +1,4 @@
-package dev.camunda.bpmn.editor.ui.component;
+package dev.camunda.bpmn.editor.ui.component.panel;
 
 import static com.intellij.util.ui.JBUI.emptyInsets;
 import static com.intellij.util.ui.JBUI.insetsBottom;
@@ -30,7 +30,7 @@ import javax.swing.JRadioButton;
  *
  * @author Oleksandr Havrysh
  */
-public class EngineComponent extends JPanel {
+public class EnginePanel extends JPanel {
 
     private final AtomicReference<BpmnEditorSettings.Engine> engineRef = new AtomicReference<>(CAMUNDA_7);
 
@@ -39,7 +39,7 @@ public class EngineComponent extends JPanel {
      *
      * @param consumer The consumer to be notified when the save button is clicked
      */
-    public EngineComponent(Consumer<EngineResult> consumer, Supplier<JComponent> panelSupplier) {
+    public EnginePanel(Consumer<EngineResult> consumer, Supplier<JComponent> panelSupplier) {
         super(new GridBagLayout());
 
         var gbc = new GridBagConstraints();

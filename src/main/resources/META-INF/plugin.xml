@@ -95,11 +95,11 @@
 
     <h3>Support the Project</h3>
     <p>If you find this plugin useful, consider supporting its development:</p>
-    <p>
-    <a href="https://revolut.me/hvrs"><img src="https://img.shields.io/badge/Donate-Revolut-black.svg" alt="Donate via Revolut" /></a>
-    <a href="https://www.paypal.com/donate/?hosted_button_id=3WQ7S7VZPCV8G"><img src="https://img.shields.io/badge/Donate-PayPal-blue.svg" alt="Donate via PayPal" /></a>
-    <a href="https://send.monobank.ua/jar/AeA9gT2Ynn"><img src="https://img.shields.io/badge/Donate-Monobank-black.svg" alt="Donate via Monobank" /></a>
-    </p>
+    <ul>
+        <li><a href="https://revolut.me/hvrs">Donate via Revolut</a></li>
+        <li><a href="https://www.paypal.com/donate/?hosted_button_id=3WQ7S7VZPCV8G">Donate via PayPal</a></li>
+        <li><a href="https://send.monobank.ua/jar/AeA9gT2Ynn">Donate via Monobank</a></li>
+    </ul>
     ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -124,6 +124,15 @@
 
     <change-notes>
         <![CDATA[
+          <p>
+            <b>1.4.3</b>
+            <ul>
+              <li>Fixed Chinese language</li>
+              <li>Added toolbar (can be hidden) and content menu</li>
+              <li>Added export to SVG</li>
+              <li>Updated dependencies (gradle and npm)</li>
+            </ul>
+          </p>
           <p>
             <b>1.4.2</b>
             <ul>

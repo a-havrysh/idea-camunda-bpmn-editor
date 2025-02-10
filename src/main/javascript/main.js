@@ -1,8 +1,9 @@
-import {enableResizing} from './panel-properties/resizer';
-import {setupObserver} from './script/observers';
+import {enablePanelPropertiesResizing} from './panelProperties/resizer';
+import {setupScriptObserver} from './panelProperties/script/observers';
 import './styles';
 import {isDarkMode, isDraculaMode} from './utils/utils';
-import {handlePasteAsync} from "./modeler/copy-paste";
+import {handlePaste} from "./modeler/paste";
+import {decode, encode} from 'js-base64';
 
 if (isDarkMode) {
     await import("../resources/ui/themes/dark/style.css");
@@ -21,20 +22,20 @@ window.initApp = async function () {
     }
 
     if (window.bpmnXml && window.bpmnXml.length > 0) {
-        const {openDiagram} = await import('./modeler/diagram-handlers');
-        await openDiagram(atob(window.bpmnXml), bpmnModeler);
+        const {openDiagram} = await import('./modeler/diagram-utils');
+        await openDiagram(decode(window.bpmnXml), bpmnModeler);
     } else {
-        const {createNewDiagram} = await import('./modeler/diagram-handlers');
+        const {createNewDiagram} = await import('./modeler/diagram-utils');
         await createNewDiagram(bpmnModeler);
     }
 
-    enableResizing();
-    setupObserver();
+    enablePanelPropertiesResizing();
+    setupScriptObserver();
 
     bpmnModeler.on('commandStack.changed', async () => {
         try {
             const {xml} = await bpmnModeler.saveXML({format: true});
-            window.updateBpmnXml(btoa(xml));
+            window.updateBpmnXml(encode(xml));
         } catch (err) {
             console.error('Error while saving XML:', err);
         }
@@ -50,6 +51,45 @@ window.initApp = async function () {
     });
 
     bpmnModeler.get('keyboard').addListener(3000, event => {
-        handlePasteAsync(event, bpmnModeler, window.serverBaseUrl);
+        handlePaste(event, bpmnModeler, window.serverBaseUrl);
     });
+
+    window.bpmnModeler = bpmnModeler;
+}
+
+window.undoOperation = function () {
+    if (window.bpmnModeler) {
+        window.bpmnModeler.get('commandStack').undo();
+    }
+}
+
+window.redoOperation = function () {
+    if (window.bpmnModeler) {
+        window.bpmnModeler.get('commandStack').redo();
+    }
+}
+
+window.copySelectedContent = function () {
+    if (window.bpmnModeler) {
+        window.bpmnModeler.get('editorActions').trigger('copy');
+    }
+}
+
+window.pasteSelectedContent = function () {
+    if (window.bpmnModeler) {
+        window.bpmnModeler.get('editorActions').trigger('paste');
+    }
+}
+
+window.exportAsSvg = async function () {
+    if (window.bpmnModeler) {
+        try {
+            const {svg} = await window.bpmnModeler.saveSVG();
+            window.saveSvg(encode(svg));
+        } catch (err) {
+            window.showErrorNotification(`<html lang="en">
+                <p>Failed to export BPMN into an SVG file</p>
+            </html>`);
+        }
+    }
 }
