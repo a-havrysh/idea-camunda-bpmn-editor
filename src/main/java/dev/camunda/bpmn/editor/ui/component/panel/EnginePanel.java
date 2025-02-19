@@ -7,7 +7,7 @@ import static java.awt.GridBagConstraints.CENTER;
 import static java.awt.GridBagConstraints.RELATIVE;
 import static java.util.Arrays.stream;
 
-import com.intellij.openapi.ui.DescriptionLabel;
+import com.intellij.ui.components.JBLabel;
 import dev.camunda.bpmn.editor.settings.BpmnEditorSettings;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -50,10 +50,10 @@ public class EnginePanel extends JPanel {
         add(new JLabel("Select BPMN engine"), gbc);
 
         gbc.insets = emptyInsets();
-        add(new DescriptionLabel("Select the BPMN engine to be used by the BPMN editor."), gbc);
-        add(new DescriptionLabel("You need to select the engine only once for the file."), gbc);
+        add(new JBLabel("Select the BPMN engine to be used by the BPMN editor."), gbc);
+        add(new JBLabel("You need to select the engine only once for the file."), gbc);
         gbc.insets = insetsBottom(20);
-        add(new DescriptionLabel("but you can always change it in the settings."), gbc);
+        add(new JBLabel("But you can always change it in the settings."), gbc);
 
         var buttonGroup = new ButtonGroup();
         stream(BpmnEditorSettings.Engine.values()).forEach(engine -> {

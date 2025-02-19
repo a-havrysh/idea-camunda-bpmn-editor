@@ -49,15 +49,15 @@ public record ImageService(ProjectService projectService) {
      * @param encodedSvg The SVG content encoded in base64 format
      */
     public void saveSvgImage(String encodedSvg) {
-        getApplication().invokeAndWait(() -> projectService.getFileFromDialog("Save SVG File",
+        getApplication().invokeLater(() -> projectService.getFileFromDialog("Save SVG File",
                         "Choose where to save the SVG file", "diagram.svg", "svg")
-                .ifPresent(selectedFile -> getApplication().runWriteAction(() -> {
+                .ifPresent(selectedFile -> {
                     try {
                         write(selectedFile.toPath(), decodeBytes(encodedSvg));
                         projectService.showNotification(SUCCESS_EXPORTED_SVG_MESSAGE);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                })));
+                }));
     }
 }

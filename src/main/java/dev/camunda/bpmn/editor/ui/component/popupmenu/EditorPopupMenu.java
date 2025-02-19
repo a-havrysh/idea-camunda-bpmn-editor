@@ -1,10 +1,10 @@
 package dev.camunda.bpmn.editor.ui.component.popupmenu;
 
-import static com.intellij.icons.ExpUiIcons.General.Copy;
-import static com.intellij.icons.ExpUiIcons.General.Export;
-import static com.intellij.icons.ExpUiIcons.General.Paste;
-import static com.intellij.icons.ExpUiIcons.General.Redo;
-import static com.intellij.icons.ExpUiIcons.General.Undo;
+import static com.intellij.icons.AllIcons.Actions.Copy;
+import static com.intellij.icons.AllIcons.Actions.MenuPaste;
+import static com.intellij.icons.AllIcons.Actions.Redo;
+import static com.intellij.icons.AllIcons.Actions.Undo;
+import static com.intellij.icons.AllIcons.ToolbarDecorator.Export;
 
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
@@ -33,7 +33,7 @@ public class EditorPopupMenu extends JBPopupMenu {
         this.redoMenuItem = new JBMenuItem("Redo", Redo);
 
         this.copyMenuItem = new JBMenuItem("Copy", Copy);
-        this.pasteMenuItem = new JBMenuItem("Paste", Paste);
+        this.pasteMenuItem = new JBMenuItem("Paste", MenuPaste);
 
         this.exportAsSvgMenuItem = new JBMenuItem("Export as SVG", Export);
 

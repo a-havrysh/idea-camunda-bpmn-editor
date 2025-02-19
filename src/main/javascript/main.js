@@ -72,6 +72,7 @@ window.redoOperation = function () {
 window.copySelectedContent = function () {
     if (window.bpmnModeler) {
         window.bpmnModeler.get('editorActions').trigger('copy');
+        window.showNotification('Copied selected content to clipboard');
     }
 }
 

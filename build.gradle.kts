@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "2.1.10"
+    id("org.jetbrains.kotlin.jvm") version "2.1.20-RC"
     id("org.jetbrains.intellij") version "1.17.4"
     id("com.github.node-gradle.node") version "7.1.0"
 }
@@ -19,7 +19,7 @@ intellij {
 }
 
 node {
-    version.set("23.1.0")
+    version.set("23.8.0")
     download.set(true)
 }
 

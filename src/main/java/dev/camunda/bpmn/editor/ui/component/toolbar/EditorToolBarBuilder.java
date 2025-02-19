@@ -1,10 +1,10 @@
 package dev.camunda.bpmn.editor.ui.component.toolbar;
 
-import static com.intellij.icons.ExpUiIcons.General.Copy;
-import static com.intellij.icons.ExpUiIcons.General.Export;
-import static com.intellij.icons.ExpUiIcons.General.Paste;
-import static com.intellij.icons.ExpUiIcons.General.Redo;
-import static com.intellij.icons.ExpUiIcons.General.Undo;
+import static com.intellij.icons.AllIcons.Actions.Copy;
+import static com.intellij.icons.AllIcons.Actions.MenuPaste;
+import static com.intellij.icons.AllIcons.Actions.Redo;
+import static com.intellij.icons.AllIcons.Actions.Undo;
+import static com.intellij.icons.AllIcons.ToolbarDecorator.Export;
 import static com.intellij.openapi.actionSystem.ActionPlaces.TOOLBAR;
 import static javax.swing.BorderFactory.createEmptyBorder;
 
@@ -63,7 +63,7 @@ public class EditorToolBarBuilder {
      * @return This builder instance for method chaining
      */
     public EditorToolBarBuilder pasteAction(JSQuery jsQuery) {
-        return buildAction("Paste content", Paste, jsQuery);
+        return buildAction("Paste content", MenuPaste, jsQuery);
     }
 
     /**

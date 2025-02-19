@@ -8,7 +8,6 @@ import static java.awt.FlowLayout.LEFT;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.DescriptionLabel;
 import com.intellij.ui.TitledSeparator;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
@@ -92,9 +91,9 @@ public class SettingsPanel extends JPanel implements Disposable {
     private JPanel addDisclaimerComponents() {
         var disclaimerPanel = new JPanel(new VerticalLayout(3));
         disclaimerPanel.setBorder(emptyLeft(20));
-        disclaimerPanel.add(new DescriptionLabel("To apply the updated settings to your currently opened BPMN files, please close the files and reopen them. "));
-        disclaimerPanel.add(new DescriptionLabel("This ensures that the new configuration is properly loaded and applied to the diagrams, reflecting the"));
-        disclaimerPanel.add(new DescriptionLabel("latest changes."));
+        disclaimerPanel.add(new JBLabel("To apply the updated settings to your currently opened BPMN files, please close the files and reopen them. "));
+        disclaimerPanel.add(new JBLabel("This ensures that the new configuration is properly loaded and applied to the diagrams,"));
+        disclaimerPanel.add(new JBLabel("reflecting the latest changes."));
         return disclaimerPanel;
     }
 
@@ -107,12 +106,12 @@ public class SettingsPanel extends JPanel implements Disposable {
         var useBpmnLinterPanel = new JPanel(new VerticalLayout(3));
         useBpmnLinterPanel.setBorder(emptyBottom(10));
         useBpmnLinterPanel.add(useBpmnLinter);
-        useBpmnLinterPanel.add(new DescriptionLabel("Add '.bpmnlintrc' file to the project to enable BPMN linter"));
-        useBpmnLinterPanel.add(new DescriptionLabel("For use custom plugins, put the source code or add it to 'package.json' to the project and run 'npm install'"));
+        useBpmnLinterPanel.add(new JBLabel("Add '.bpmnlintrc' file to the project to enable BPMN linter"));
+        useBpmnLinterPanel.add(new JBLabel("For use custom plugins, put the source code or add it to 'package.json' to the project and run 'npm install'"));
 
         var useToolBarPanel = new JPanel(new VerticalLayout(3));
         useToolBarPanel.add(useToolBar);
-        useToolBarPanel.add(new DescriptionLabel("Show toolbar for the editor"));
+        useToolBarPanel.add(new JBLabel("Show toolbar for the editor"));
 
         var globalSettingPanel = new JPanel(new VerticalLayout(3));
         globalSettingPanel.setBorder(emptyLeft(20));
@@ -155,9 +154,10 @@ public class SettingsPanel extends JPanel implements Disposable {
     private JPanel addDiagramSettingsComponents() {
         var diagramSettingsPanel = new JPanel(new VerticalLayout(3));
         diagramSettingsPanel.setBorder(emptyLeft(20));
-        diagramSettingsPanel.add(new DescriptionLabel("This is a list of used BPMN files. You can individually configure the engine, theme, and auto script format"));
-        diagramSettingsPanel.add(new DescriptionLabel("for inline scripts. You can also delete the selected row or clear the table. If you select an empty value"));
-        diagramSettingsPanel.add(new DescriptionLabel("from the dropdown, the default value will be used if it is set."));
+        diagramSettingsPanel.add(new JBLabel("This is a list of used BPMN files."));
+        diagramSettingsPanel.add(new JBLabel("You can individually configure the engine, theme, and auto script format for inline scripts."));
+        diagramSettingsPanel.add(new JBLabel("You can also delete the selected row or clear the table."));
+        diagramSettingsPanel.add(new JBLabel("If you select an empty value from the dropdown, the default value will be used if it is set."));
         diagramSettingsPanel.add(new JBScrollPane(bpmnSettingsTable));
         diagramSettingsPanel.add(createTableButtonsPanel());
 
