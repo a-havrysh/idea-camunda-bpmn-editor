@@ -22,6 +22,14 @@
     <li>For Camunda 7 added working with 'inline script' in external script editor.</li>
     </ul>
 
+    <h3>Support the Project</h3>
+    <p>If you find this plugin useful, consider supporting its development:</p>
+    <ul>
+        <li><a href="https://revolut.me/hvrs">Donate via Revolut</a></li>
+        <li><a href="https://www.paypal.com/donate/?hosted_button_id=3WQ7S7VZPCV8G">Donate via PayPal</a></li>
+        <li><a href="https://send.monobank.ua/jar/AeA9gT2Ynn">Donate via Monobank</a></li>
+    </ul>
+
     <h3>SUPPORTED BPMN LINTER</h3>
 
     <p>The Camunda BPMN Editor Plugin includes a linter to help you maintain high-quality BPMN diagrams. Here's how to set it up and use it:</p>
@@ -92,14 +100,6 @@
         </ul>
     </li>
     </ol>
-
-    <h3>Support the Project</h3>
-    <p>If you find this plugin useful, consider supporting its development:</p>
-    <ul>
-        <li><a href="https://revolut.me/hvrs">Donate via Revolut</a></li>
-        <li><a href="https://www.paypal.com/donate/?hosted_button_id=3WQ7S7VZPCV8G">Donate via PayPal</a></li>
-        <li><a href="https://send.monobank.ua/jar/AeA9gT2Ynn">Donate via Monobank</a></li>
-    </ul>
     ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -120,10 +120,19 @@
         <notificationGroup
                 id="dev.camunda.bpmn.editor.notification"
                 displayType="BALLOON"/>
+        <fileType name="BPMN" description="BPMN process definition file" implementationClass="dev.camunda.bpmn.editor.vfs.BpmnFileType" extensions="bpmn;bpmn.xml" language="BPMN"/>
     </extensions>
 
     <change-notes>
         <![CDATA[
+          <p>
+            <b>1.4.4</b>
+            <ul>
+              <li>Fixed Base64 encoding</li>
+              <li>Added custom logo for file</li>
+              <li>Updated dependencies (gradle and npm)</li>
+            </ul>
+          </p>
           <p>
             <b>1.4.3</b>
             <ul>

@@ -173,16 +173,16 @@ public record ProjectService(Project project) {
      * This method creates and displays a file save dialog with the specified parameters,
      * allowing the user to choose a location and name for saving a file. The dialog
      * can be customized with a title, description, default filename, and allowed file
-     * extensions.
+     * extension.
      *
      * @param title       The title of the file chooser dialog
      * @param description The description text shown in the file chooser dialog
      * @param fileName    The default file name to be shown in the dialog
-     * @param extensions  The allowed file extensions (e.g., "svg", "png")
+     * @param extension  The allowed file extension (e.g., "svg", "png")
      * @return An Optional containing the selected File if the user completes the dialog, or empty if the dialog is canceled
      */
-    public Optional<File> getFileFromDialog(String title, String description, String fileName, String... extensions) {
-        var descriptor = new FileSaverDescriptor(title, description, extensions);
+    public Optional<File> getFileFromDialog(String title, String description, String fileName, String extension) {
+        var descriptor = new FileSaverDescriptor(title, description, extension);
         var fileWrapper = FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project).save(fileName);
         return isNull(fileWrapper) ? Optional.empty() : Optional.of(fileWrapper.getFile());
     }

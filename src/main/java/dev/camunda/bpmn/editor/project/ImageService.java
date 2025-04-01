@@ -5,6 +5,7 @@ import static dev.camunda.bpmn.editor.util.Base64Utils.decodeBytes;
 import static java.nio.file.Files.write;
 
 import java.io.IOException;
+import lombok.CustomLog;
 
 /**
  * Service class for handling image-related operations in the BPMN editor.
@@ -19,6 +20,7 @@ import java.io.IOException;
  * @param projectService The ProjectService instance used for file operations and notifications
  * @author Oleksandr Havrysh
  */
+@CustomLog
 public record ImageService(ProjectService projectService) {
 
     /**
@@ -51,13 +53,13 @@ public record ImageService(ProjectService projectService) {
     public void saveSvgImage(String encodedSvg) {
         getApplication().invokeLater(() -> projectService.getFileFromDialog("Save SVG File",
                         "Choose where to save the SVG file", "diagram.svg", "svg")
-                .ifPresent(selectedFile -> {
+                .ifPresent(selectedFile -> getApplication().runWriteAction(() -> {
                     try {
                         write(selectedFile.toPath(), decodeBytes(encodedSvg));
                         projectService.showNotification(SUCCESS_EXPORTED_SVG_MESSAGE);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        log.error("Error while saving SVG file", e);
                     }
-                }));
+                })));
     }
 }

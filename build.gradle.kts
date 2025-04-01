@@ -1,25 +1,23 @@
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.1.20-RC"
-    id("org.jetbrains.intellij") version "1.17.4"
+    id("org.jetbrains.intellij.platform") version "2.5.0"
     id("com.github.node-gradle.node") version "7.1.0"
 }
 
 group = "dev.camunda.bpmn"
-version = "1.4.3"
+version = "1.4.4"
 
 repositories {
     mavenCentral()
-}
 
-intellij {
-    version.set("2023.2.6")
-    type.set("IC")
-    plugins.set(listOf())
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 node {
-    version.set("23.8.0")
+    version.set("23.10.0")
     download.set(true)
 }
 
@@ -61,4 +59,8 @@ sourceSets {
 dependencies {
     compileOnly("org.projectlombok:lombok:1.18.36")
     annotationProcessor("org.projectlombok:lombok:1.18.36")
+
+    intellijPlatform {
+        intellijIdeaCommunity("2024.3.5")
+    }
 }

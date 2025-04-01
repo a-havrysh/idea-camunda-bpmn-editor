@@ -23,6 +23,7 @@ import dev.camunda.bpmn.editor.jcef.Browser;
 import dev.camunda.bpmn.editor.project.ProjectService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import lombok.CustomLog;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Oleksandr Havrysh
  */
+@CustomLog
 public class ScriptFile implements FileEditorManagerListener, DocumentListener, Disposable {
 
     private static final String DOT = ".";
@@ -123,7 +125,7 @@ public class ScriptFile implements FileEditorManagerListener, DocumentListener, 
             document.addDocumentListener(this);
             isDocumentListenerRegistered.set(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to add document listener to script file", e);
         }
     }
 

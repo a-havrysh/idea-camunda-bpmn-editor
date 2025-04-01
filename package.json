@@ -30,16 +30,16 @@
   "license": "MIT",
   "dependencies": {
     "@bpmn-io/element-template-chooser": "^1.0.0",
-    "@bpmn-io/properties-panel": "^3.26.1",
-    "bpmn-js": "^18.3.0",
+    "@bpmn-io/properties-panel": "^3.26.4",
+    "bpmn-js": "^18.4.0",
     "bpmn-js-bpmnlint": "^0.23.0",
     "bpmn-js-create-append-anything": "^0.6.0",
-    "bpmn-js-properties-panel": "^5.32.0",
+    "bpmn-js-properties-panel": "^5.35.0",
     "bpmn-js-sketchy": "^0.7.2",
-    "bpmn-js-token-simulation": "^0.37.0",
-    "bpmnlint": "^11.2.0",
+    "bpmn-js-token-simulation": "^0.38.1",
+    "bpmnlint": "^11.4.2",
     "bpmnlint-utils": "^1.1.1",
-    "camunda-bpmn-js": "^5.5.1",
+    "camunda-bpmn-js": "^5.7.1",
     "camunda-bpmn-js-behaviors": "^1.9.1",
     "codemirror": "^5.65.18",
     "diagram-js": "^15.2.4",
@@ -47,13 +47,13 @@
     "jquery": "^3.5.1",
     "js-base64": "^3.7.7",
     "path-browserify": "^1.0.1",
-    "react": "^19.0.0",
+    "react": "^19.1.0",
     "sync-request": "^6.1.0",
-    "terser-webpack-plugin": "^5.3.11"
+    "terser-webpack-plugin": "^5.3.14"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.9",
-    "babel-loader": "^9.2.1",
+    "@babel/core": "^7.26.10",
+    "babel-loader": "^10.0.0",
     "bpmnlint-loader": "^0.1.6",
     "css-loader": "^7.1.2",
     "ignore-loader": "^0.1.2",
@@ -62,6 +62,6 @@
     "style-loader": "^4.0.0",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0"
+    "webpack-dev-server": "^5.2.1"
   }
 }

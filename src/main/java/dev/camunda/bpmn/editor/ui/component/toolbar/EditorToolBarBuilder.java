@@ -108,7 +108,7 @@ public class EditorToolBarBuilder {
             }
         };
 
-        var toolbarPanel = new ToolbarPanel(component, actionGroup, TOOLBAR, null);
+        var toolbarPanel = new ToolbarPanel(component, actionGroup, TOOLBAR, component);
         toolbarPanel.setBorder(createEmptyBorder());
         return toolbarPanel;
     }
