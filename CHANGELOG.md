@@ -1,7 +1,17 @@
 # Changelog
 
-## 1.4.2
+## 1.4.4
+- Fixed Base64 encoding
+- Added custom logo for file
+- Updated dependencies (gradle and npm)
 
+## 1.4.3
+- Fixed Chinese language
+- Added toolbar (can be hidden) and content menu
+- Added export to SVG
+- Updated dependencies (gradle and npm)
+
+## 1.4.2
 - Added the BPMN Linter
 - Fix copy/paste elements with different diagrams
 
